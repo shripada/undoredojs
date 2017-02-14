@@ -5,29 +5,33 @@
 	</head>
 <body>
 
-<script src="jscolor.js"></script>
-
-<canvas id="myCanvas" width="300" height="150" style="border:6px solid red; background-color:#00A800";>
-Your browser does not support the HTML5 canvas tag.</canvas>
-<hr>
-	Background Color: <input id="colorpicker" class="jscolor" value="00A800">
-<hr>
-<button id="undo"> Undo </button>
-<button id="redo"> Redo </button>
-<hr>
-<div id= "wrapper">
-	<div id = "first">
-		<h2> Undo Stack </h2>
-		<ul id= "undoList"> </ul>
+	<script src="jscolor.js"></script>
+	<div class="center headDiv" id="myCanvas" style="background-color:green;">
+	</div>
+	<hr>
+	<div class= "center">
+		Background Color: <input id="colorpicker" class="jscolor" value="00A800">
 	</div>
 
-	<div id = "second">
-		<h2> Redo Stack </h2>
-		<ul id= "redoList"> </ul>
+	<hr>
+	<div class = "center">
+		<button id="undo"> Undo </button>
+		<button id="redo"> Redo </button>
 	</div>
-</div>
+	<hr>
+	<div id= "wrapper" class = "center">
+		<div id = "first">
+			<h2> Undo Stack </h2>
+			<ul id= "undoList"> </ul>
+		</div>
+
+		<div id = "second">
+			<h2> Redo Stack </h2>
+			<ul id= "redoList"> </ul>
+		</div>
+	</div>
 
 
-<script src="script.js">  </script>
+	<script src="script.js">  </script>
 </body>
 </html>
