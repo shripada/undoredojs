@@ -6,19 +6,24 @@
 <body>
 
 	<script src="jscolor.js"></script>
-	<div class="center headDiv" id="myCanvas" style="background-color:green;">
-	</div>
+	<! Our color box. We will keep changing its background color>
+	<div class="center headDiv" id="myCanvas" style="background-color:green;"></div>
 	<hr>
+
+	<! Color picker, that choosing a color >
 	<div class= "center">
 		Background Color: <input id="colorpicker" class="jscolor" value="00A800">
 	</div>
-
 	<hr>
+
+	<! Undo/Redo buttons>
 	<div class = "center">
 		<button id="undo"> Undo </button>
 		<button id="redo"> Redo </button>
 	</div>
 	<hr>
+
+	<! Lists to display undo/redo stacks>
 	<div id= "wrapper" class = "center">
 		<div id = "first">
 			<h2> Undo Stack </h2>
