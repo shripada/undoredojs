@@ -107,7 +107,7 @@ let APP = function () {
     }
 
     function buildStackUI(stack, list, undo) {
-        let items = stack.slice().reverse();
+        let items = stack.slice();
         let listItemsHtml = "";
          
         items.forEach( element => {
