@@ -15,3 +15,11 @@
 li:not(:last-child) {
     margin-bottom: 5px;
 }
+
+#first>h2{
+    color: seagreen;
+}
+
+#second>h2{
+    color: steelblue;
+}

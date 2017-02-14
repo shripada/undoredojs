@@ -1,5 +1,5 @@
 //A simple stack implementation using JavaScript's 
-//Array data structure. 
+//Array data structure. True that Javascript Array provides push and pop operations
 let stack = function() {
     var top = -1;
     var items = [];
@@ -144,10 +144,7 @@ let APP = function () {
             let li = `<li style = \"background-color:${data}; width: 50px;\"> </li>`;
             listItemsHtml += li;
         }
-         
-         console.log(listItemsHtml);
-
-         list.innerHTML = listItemsHtml; 
+        list.innerHTML = listItemsHtml; 
     }
 
     function displayStacks() {
