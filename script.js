@@ -1,33 +1,3 @@
-//A simple stack implementation using JavaScript's 
-//Array data structure. True that Javascript Array provides push and pop operations
-let stack = function() {
-    var top = -1;
-    var items = [];
-
-    return {
-        pop: function () {
-  
-            return items[top--]; 
-        },
-
-        push: function (item) {
-            items[++top] = item;
-        },
-
-        capacity: function () {
-            return top + 1; 
-        },
-
-        removeAll: function () {
-            top = -1; 
-            items = []; 
-        },
-
-        rawItems: function () {
-            return items; 
-        }
-    }
-}
 
 //APP object encapsulates all the target actions, and managing undo/redo
 //operations needed. 
@@ -38,8 +8,10 @@ let APP = function () {
     let undoButton = document.getElementById("undo");
     let redoButton = document.getElementById("redo")
 
-    var undoStack = stack();
-    var redoStack = stack(); 
+    //Javascript's Array supports push and pop methods and thus serves
+    //as a stack data structure. 
+    var undoStack = [];
+    var redoStack = []; 
 
     undoButton.disabled = true;
     redoButton.disabled = true;
@@ -85,7 +57,7 @@ let APP = function () {
 
 
         //Flush out any pending redo's as we are recording a new action. 
-        redoStack.removeAll();
+        redoStack = [];
 
         //Push the command into undo stack, so that we can undo this action. 
         undoStack.push(cmd);
@@ -109,7 +81,7 @@ let APP = function () {
 
         //Udate redo button status 
         redoButton.disabled = false; 
-        if (undoStack.capacity() == 0) {
+        if (undoStack.length == 0) {
             undoButton.disabled = true; 
         }
 
@@ -127,7 +99,7 @@ let APP = function () {
 
         //Update status of undo button 
         undoButton.disabled = false; 
-        if (redoStack.capacity() == 0) {
+        if (redoStack.length == 0) {
             redoButton.disabled = true; 
         }
 
@@ -135,15 +107,15 @@ let APP = function () {
     }
 
     function buildStackUI(stack, list, undo) {
-        let items = stack.rawItems().slice(0, stack.capacity()).reverse();
+        let items = stack.slice().reverse();
         let listItemsHtml = "";
-
-        for (i = 0; i < stack.capacity(); i++) {
-            let element = items[i]; 
+         
+        items.forEach( element => {
             let data = undo? element.undoData : element.redoData; 
             let li = `<li style = \"background-color:${data}; width: 50px;\"> </li>`;
             listItemsHtml += li;
-        }
+        })
+       
         list.innerHTML = listItemsHtml; 
     }
 
