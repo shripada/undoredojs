@@ -1,0 +1,25 @@
+#wrapper {
+    width: 300px;
+    overflow: hidden; /* add this to contain floated children */
+}
+#first {
+    width: 150px;
+    float:left; /* add this */
+}
+
+#second {
+    width: 150px;    
+    margin-left: 150px; /* add this */
+}
+
+li:not(:last-child) {
+    margin-bottom: 5px;
+}
+
+#first>h2{
+    color: seagreen;
+}
+
+#second>h2{
+    color: steelblue;
+}
