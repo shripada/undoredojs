@@ -1,15 +1,17 @@
 #wrapper {
-    width: 500px;
-    border: 1px solid black;
+    width: 300px;
     overflow: hidden; /* add this to contain floated children */
 }
 #first {
-    width: 300px;
+    width: 150px;
     float:left; /* add this */
-    border: 1px solid red;
 }
+
 #second {
-    width: 300px;    
-    border: 1px solid green;
-    margin-left: 300px; /* add this */
+    width: 150px;    
+    margin-left: 150px; /* add this */
+}
+
+li:not(:last-child) {
+    margin-bottom: 5px;
 }

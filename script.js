@@ -21,6 +21,10 @@ let stack = function() {
         removeAll: function () {
             top = -1; 
             items = []; 
+        },
+
+        rawItems: function () {
+            return items; 
         }
     }
 }
@@ -48,6 +52,8 @@ let APP = function () {
             redo : undefined,
             undo : undefined,
             name: "action name",
+            undoData: undefined,
+            redoData: undefined
         }
     }
 
@@ -62,18 +68,21 @@ let APP = function () {
 
         //Build the command object that performs setting/unsetting color
         let cmd = command();
+        cmd.redoData = color
+        cmd.undoData = currentColor; 
         cmd.redo = function() {
             console.log("color selected = " + color);
             canvasElement.style.backgroundColor = color; 
+           
          }
 
         cmd.undo = function () {
             canvasElement.style.backgroundColor = currentColor; 
+            
          }
         cmd.name = "set color #" + colorPicker.value; 
 
-        //Perform the setting of the color. 
-        cmd.redo(); 
+
 
         //Flush out any pending redo's as we are recording a new action. 
         redoStack.removeAll();
@@ -81,9 +90,14 @@ let APP = function () {
         //Push the command into undo stack, so that we can undo this action. 
         undoStack.push(cmd);
 
+        //Perform the setting of the color. 
+        cmd.redo(); 
+
         //Button status update 
         redoButton.disabled = true; 
         undoButton.disabled = false; 
+
+        displayStacks();
     }
     
     undoButton.onclick = function () {
@@ -98,6 +112,8 @@ let APP = function () {
         if (undoStack.capacity() == 0) {
             undoButton.disabled = true; 
         }
+
+        displayStacks();
     }
 
     redoButton.onclick = function () {
@@ -114,6 +130,30 @@ let APP = function () {
         if (redoStack.capacity() == 0) {
             redoButton.disabled = true; 
         }
+
+        displayStacks();
+    }
+
+    function buildStackUI(stack, list, undo) {
+        let items = stack.rawItems().slice().reverse();
+        let listItemsHtml = "";
+
+        for (i = 0; i < stack.capacity(); i++) {
+            let element = items[i]; 
+            let data = undo? element.undoData : element.redoData; 
+            let li = `<li style = \"background-color:${data}; width: 50px;\"> </li>`;
+            listItemsHtml += li;
+        }
+         
+         console.log(listItemsHtml);
+
+         list.innerHTML = listItemsHtml; 
+    }
+
+    function displayStacks() {
+        buildStackUI(undoStack, document.getElementById("undoList"), true);
+        buildStackUI(redoStack, document.getElementById("redoList"), false);
+ 
     }
     
 }; 
