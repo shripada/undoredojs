@@ -1,3 +1,9 @@
+//In JavaScript, Array itself supports stack data structure. It supports push and pop methods
+let stack = function () {
+    return []; 
+}
+
+
 
 //APP object encapsulates all the target actions, and managing undo/redo
 //operations needed. 
@@ -10,8 +16,8 @@ let APP = function () {
 
     //Javascript's Array supports push and pop methods and thus serves
     //as a stack data structure. 
-    var undoStack = [];
-    var redoStack = []; 
+    var undoStack = stack();
+    var redoStack = stack(); 
 
     undoButton.disabled = true;
     redoButton.disabled = true;
@@ -57,7 +63,7 @@ let APP = function () {
 
 
         //Flush out any pending redo's as we are recording a new action. 
-        redoStack = [];
+        redoStack = stack();
 
         //Push the command into undo stack, so that we can undo this action. 
         undoStack.push(cmd);
