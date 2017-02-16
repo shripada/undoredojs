@@ -1,5 +1,5 @@
 //In JavaScript, Array itself supports stack data structure. It supports push and pop methods
-let stack = function () {
+var stack = function () {
     return []; 
 }
 
@@ -9,15 +9,18 @@ let stack = function () {
 //operations needed. 
 let APP = function () {
 
-    var canvasElement = document.getElementById("myCanvas");
+    var canvas = document.getElementById("myCanvas");
     var colorPicker = document.getElementById("colorpicker")
-    let undoButton = document.getElementById("undo");
-    let redoButton = document.getElementById("redo")
+    var undoButton = document.getElementById("undo");
+    var redoButton = document.getElementById("redo")
 
     //Javascript's Array supports push and pop methods and thus serves
     //as a stack data structure. 
     var undoStack = stack();
     var redoStack = stack(); 
+
+    //Currently being executed command
+    var currentCommand = undefined; 
 
     undoButton.disabled = true;
     redoButton.disabled = true;
@@ -25,99 +28,80 @@ let APP = function () {
     //Command object template. Functions are a beautiful way to introduce
     //necessary structures like Command in this case. Command encapsulates
     //doing and undoing an operation. 
-    let command = function () {
+    var command = function (data) {
+        var commandData = data; //Data that might be needed by the execute method.    
         return {
-            redo : undefined,
-            undo : undefined,
-            name: "action name",
-            undoData: undefined,
-            redoData: undefined
+            execute : function() {
+                canvas.style.backgroundColor = commandData;  
+            },
+
+            data: function () {
+                return commandData; 
+            }()
         }
     }
 
     colorPicker.onchange  = function () {
 
-         let currentColor = canvasElement.style.backgroundColor; 
-
         //Capture the color that is set just now 
-        let color = function () {
+        var color = function () {
                 return "#" + colorPicker.value;
             }();
 
+
         //Build the command object that performs setting/unsetting color
-        let cmd = command();
-        cmd.redoData = color
-        cmd.undoData = currentColor; 
-        cmd.redo = function() {
-            console.log("color selected = " + color);
-            canvasElement.style.backgroundColor = color; 
-           
-         }
+        currentCommand = command(color);
 
-        cmd.undo = function () {
-            canvasElement.style.backgroundColor = currentColor; 
-            
-         }
-        cmd.name = "set color #" + colorPicker.value; 
-
-
+        //Also prepare command that will undo the above command. 
+        var undoCommand = command(canvas.style.backgroundColor);
 
         //Flush out any pending redo's as we are recording a new action. 
         redoStack = stack();
 
         //Push the command into undo stack, so that we can undo this action. 
-        undoStack.push(cmd);
+        undoStack.push(undoCommand);
 
-        //Perform the setting of the color. 
-        cmd.redo(); 
+        //Perform the current operation. 
+        currentCommand.execute(); 
 
-        //Button status update 
-        redoButton.disabled = true; 
-        undoButton.disabled = false; 
+        updateUI(); 
+    }
 
-        displayStacks();
+    function rotateCommands(fromStack, toStack){
+        //Push the current command into the toStack
+        toStack.push(currentCommand); 
+        
+        //Pop from fromStack and set it as the current command.
+        currentCommand = fromStack.pop(); 
+
+        //Execute the current command
+        currentCommand.execute();
     }
     
     undoButton.onclick = function () {
-        //Pop the command, perform undo. 
-        //push the same into redo stack 
-        let cmd  = undoStack.pop();
-        cmd.undo(); 
-        redoStack.push(cmd)
-
-        //Udate redo button status 
-        redoButton.disabled = false; 
-        if (undoStack.length == 0) {
-            undoButton.disabled = true; 
-        }
-
-        displayStacks();
+        //Pop from undo stack and execute, then push the reverse command into redo stack 
+        rotateCommands(undoStack, redoStack);
+        updateUI();
     }
 
     redoButton.onclick = function () {
+        //Pop from redo stack and execute, then push the reverse command into undo stack 
+        rotateCommands(redoStack, undoStack);
+        updateUI();
+    }
 
-        //Pop the command from Redo stack. 
-        //Perform redo on the command, then push it back into 
-        //undo stack. 
-        let cmd  = redoStack.pop();
-        cmd.redo(); 
-        undoStack.push(cmd); 
-
-        //Update status of undo button 
-        undoButton.disabled = false; 
-        if (redoStack.length == 0) {
-            redoButton.disabled = true; 
-        }
-
+    function updateUI() {
+        undoButton.disabled = undoStack.length === 0; 
+        redoButton.disabled = redoStack.length === 0; 
         displayStacks();
     }
 
-    function buildStackUI(stack, list, undo) {
+    function buildStackUI(stack, list) {
         let items = stack.slice();
         let listItemsHtml = "";
          
         items.forEach( element => {
-            let data = undo? element.undoData : element.redoData; 
+            let data = element.data; 
             let li = `<li style = \"background-color:${data}; width: 50px;\"> </li>`;
             listItemsHtml += li;
         })
@@ -126,8 +110,8 @@ let APP = function () {
     }
 
     function displayStacks() {
-        buildStackUI(undoStack, document.getElementById("undoList"), true);
-        buildStackUI(redoStack, document.getElementById("redoList"), false);
+        buildStackUI(undoStack, document.getElementById("undoList"));
+        buildStackUI(redoStack, document.getElementById("redoList"));
  
     }
     
