@@ -19,17 +19,15 @@ let APP = function () {
     var undoStack = stack();
     var redoStack = stack(); 
 
-    //Currently being executed command
-    var currentCommand = undefined; 
-
     undoButton.disabled = true;
     redoButton.disabled = true;
 
-    //Command object template. Functions are a beautiful way to introduce
+    //Command object. Functions are a beautiful way to introduce
     //necessary structures like Command in this case. Command encapsulates
-    //doing and undoing an operation. 
+    //in this case, setting up of background color of our canvas. 
     var command = function (data) {
         var commandData = data; //Data that might be needed by the execute method.    
+        
         return {
             execute : function() {
                 canvas.style.backgroundColor = commandData;  
@@ -40,6 +38,9 @@ let APP = function () {
             }()
         }
     }
+
+    //Currently being executed command
+    var currentCommand = undefined; 
 
     colorPicker.onchange  = function () {
 
